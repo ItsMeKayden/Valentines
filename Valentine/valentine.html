@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Day</title>
+  <style>
+    body {
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: pink;
+      overflow: hidden;
+    }
+
+    #valentine-text {
+      font-size: 24px;
+    }
+
+    #buttons {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 0 10px;
+      padding: 20px 50px;
+      font-size: 20px;
+      background-color: palevioletred;
+      color: aliceblue;
+      border: 3px solid black;
+      border-radius: 5%;
+      transition: all 0.5s ease-in-out;
+    }
+
+    button:hover {
+      margin: 0 10px;
+      padding: 20px 50px;
+      font-size: 20px;
+      background-color: bisque;
+      color: black;
+      border: 3px solid black;
+      border-radius: 5%;
+    }
+
+    video {
+      display: none;
+      width: 100vw;
+      height: auto;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div id="valentine-text">
+    <h1>WILL YOU BE MY VALENTINE?</h1>
+  </div>
+  <div id="buttons">
+    <button onclick="handleYesButtonClick()">Yes</button>
+    <button onclick="handleNoButtonClick()">No</button>
+  </div>
+
+  <video id="angryCat" controls>
+    <source src="angy cat.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <video id="insane" controls>
+    <source src="evil and insane.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <video id="cry" controls>
+    <source src="cry.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <video id="backgroundVideo" autoplay loop muted>
+    <source src="vvvvv.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    var clickCount = 0;
+
+    function handleYesButtonClick() {
+      showVideo('backgroundVideo', true);
+      updateText('YAY. I LOVE YOU MWAAAA');
+      playBackgroundVideo();
+      hideButtons();
+    }
+
+    function playBackgroundVideo() {
+      var backgroundVideo = document.getElementById('backgroundVideo');
+      backgroundVideo.play().then(() => {}).catch((error) => {
+        // Autoplay may be blocked, handle this case
+        console.error("Autoplay was blocked. Please click on the page to start the background video.");
+      });
+    }
+
+    function handleNoButtonClick() {
+      clickCount++;
+      changePosition();
+
+      if (clickCount === 1) {
+        showAndPlayVideo('angryCat');
+      } else if (clickCount === 3) {
+        showAndPlayVideo('insane');
+      } else if (clickCount === 5) {
+        showAndPlayVideo('cry');
+      } else {
+        showAndPlayVideo('angryCat');
+      }
+    }
+
+    function changePosition() {
+      var button = document.querySelector('#buttons button:last-child');
+      var rect = button.getBoundingClientRect();
+
+      var maxX = rect.left + 300;
+      var maxY = rect.top + 300;
+
+      var randomX = Math.max(rect.left, Math.min(maxX, rect.left + Math.random() * 300));
+      var randomY = Math.max(rect.top, Math.min(maxY, rect.top + Math.random() * 300));
+
+      button.style.transform = `translate(${randomX - rect.left}px, ${randomY - rect.top}px)`;
+    }
+
+    function showAndPlayVideo(videoId) {
+      // Pause all videos
+      document.querySelectorAll('video').forEach(function(video) {
+        video.pause();
+        video.style.display = 'none';
+      });
+
+      // Show the specified video
+      var currentVideo = document.getElementById(videoId);
+      currentVideo.style.display = 'block';
+
+      // Play the video
+      currentVideo.play().then(() => {}).catch((error) => {
+        // Autoplay may be blocked, handle this case
+        console.error("Autoplay was blocked. Please click on the page to start the video.");
+      });
+    }
+
+    function showVideo(videoId, autoplay) {
+      // Hide all videos
+      document.querySelectorAll('video').forEach(function(video) {
+        video.style.display = 'none';
+      });
+
+      // Show the specified video
+      var currentVideo = document.getElementById(videoId);
+      currentVideo.style.display = 'block';
+
+      // Set autoplay attribute if specified
+      if (autoplay) {
+        currentVideo.autoplay = true;
+      }
+    }
+
+    function hideButtons() {
+      // Hide the buttons
+      document.getElementById('buttons').style.display = 'none';
+    }
+
+    function updateText(newText) {
+      // Update the h1 text
+      document.getElementById('valentine-text').innerHTML = '<h1>' + newText + '</h1>';
+    }
+</script>
+
+</body>
+</html>
